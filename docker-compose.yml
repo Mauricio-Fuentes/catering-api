@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  db-microservices:
+    image: postgres:15
+    container_name: postgres_db_microservices-two
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: msuser
+      POSTGRES_PASSWORD: mspassword
+      POSTGRES_DB: microservicesdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata-microservices-last-new-two:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d
+
+volumes:
+  pgdata-microservices-last-new-two:
