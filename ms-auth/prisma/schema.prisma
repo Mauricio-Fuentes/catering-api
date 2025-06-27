@@ -97,7 +97,7 @@ model Role {
 model User {
   id        Int       @id @default(autoincrement())
   user      String
-  email     String
+  email     String    @unique
   name      String
   password  String
   role_id   Int
