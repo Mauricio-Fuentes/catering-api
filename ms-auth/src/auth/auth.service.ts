@@ -49,11 +49,11 @@ export class AuthService extends PrismaClient implements OnModuleInit {
   }
 
   async registerUser(registerUserDto: RegisterUserDto) {
-    const { email, name, password } = registerUserDto;
+    const { user, email, name, password, roleId } = registerUserDto;
 
     try {
-      const user = await this.user.findUnique({
-        where: {
+      const userCreate = await this.user.findUnique({
+        where: { 
           email: email,
         },
       });
