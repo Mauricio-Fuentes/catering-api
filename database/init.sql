@@ -15,7 +15,7 @@ ON CONFLICT DO NOTHING;
 CREATE TABLE IF NOT EXISTS public."User"(
     id serial4 NOT NULL,
     "user" text NOT NULL,
-    "email" text NOT NULL,
+    email text NOT NULL UNIQUE,
     name text NOT NULL,
     "password" text NOT NULL,
     "role_id" int4 NOT NULL,

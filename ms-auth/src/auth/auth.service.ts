@@ -52,13 +52,13 @@ export class AuthService extends PrismaClient implements OnModuleInit {
     const { user, email, name, password, roleId } = registerUserDto;
 
     try {
-      const userCreate = await this.user.findUnique({
+      const userCreated = await this.user.findUnique({
         where: { 
           email: email,
         },
       });
 
-      if (user) {
+      if (userCreated) {
         throw new RpcException({
           status: 400,
           message: 'User already exists',
@@ -70,6 +70,8 @@ export class AuthService extends PrismaClient implements OnModuleInit {
           email: email,
           password: bcrypt.hashSync(password, 10), 
           name: name,
+          role_id: roleId,
+          user: user
         },
       });
 
