@@ -10,14 +10,9 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
-      transport: Transport.KAFKA,
+      transport: Transport.NATS,
       options: {
-        client: {
-          brokers: ['kafka:9092']
-        },
-        consumer: {
-          groupId: 'ms-recipe',
-        }
+        servers: envs.natsServers
       }
     }
   );

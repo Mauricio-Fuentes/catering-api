@@ -4,6 +4,7 @@ import { NatsModule } from './transports/nats.module';
 import { AuthModule } from './auth/auth.module';
 import { HealthCheckModule } from './health-check/health-check.module';
 import { KafkaModule } from './transports/kafka.module';
+import { RecipesModule } from './recipes/recipes.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { KafkaModule } from './transports/kafka.module';
     NatsModule,
     AuthModule,
     HealthCheckModule,
+    RecipesModule,
   ],
 })
 export class AppModule {}

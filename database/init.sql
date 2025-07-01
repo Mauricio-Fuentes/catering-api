@@ -51,12 +51,13 @@ CREATE TABLE IF NOT EXISTS public."Recipe"(
 
 CREATE TABLE IF NOT EXISTS public."detailRecipe"(
     id serial4 NOT NULL,
-    recipeId int4 NOT NULL,
+    "recipeId" int4 NOT NULL,
     productId int4 not NULL,
     quantity int4 NOT NULL,
     "createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP NULL,
 	"updatedAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP NULL,
-    CONSTRAINT "DetailRecipe_pkey" PRIMARY KEY (id)
+    CONSTRAINT "DetailRecipe_pkey" PRIMARY KEY (id),
+    CONSTRAINT "RecipeDetail_recipeId_fkey" FOREIGN KEY ("recipeId") REFERENCES public."Recipe"(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS public."PlantType"(

@@ -2,33 +2,35 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('recipes')
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
-  @Post()
-  create(@Body() createRecipeDto: CreateRecipeDto) {
+  @MessagePattern('createRecipeComplete')
+  create(@Payload() createRecipeDto: CreateRecipeDto) {
     return this.recipesService.create(createRecipeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.recipesService.findAll();
+  @MessagePattern('findAllRecipes')
+  findAll(@Payload() query: PaginationDto) {
+    return this.recipesService.findAll(query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @MessagePattern('findRecipe')
+  findOne(@Payload('id') id: string) {
     return this.recipesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto) {
-    return this.recipesService.update(+id, updateRecipeDto);
+  @MessagePattern('UpdateRecipe')
+  update(@Payload() updateRecipeDto: UpdateRecipeDto) {
+    return this.recipesService.update(updateRecipeDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @MessagePattern('deleteRecipe')
+  remove(@Payload() id: string) {
     return this.recipesService.remove(+id);
   }
 }
