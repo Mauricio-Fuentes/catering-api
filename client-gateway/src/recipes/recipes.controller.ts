@@ -23,13 +23,4 @@ export class RecipesController {
     return this.recipesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto) {
-    return this.recipesService.update(+id, updateRecipeDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.recipesService.remove(+id);
-  }
 }

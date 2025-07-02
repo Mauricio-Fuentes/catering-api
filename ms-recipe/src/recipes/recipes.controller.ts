@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
@@ -24,13 +24,4 @@ export class RecipesController {
     return this.recipesService.findOne(+id);
   }
 
-  @MessagePattern('UpdateRecipe')
-  update(@Payload() updateRecipeDto: UpdateRecipeDto) {
-    return this.recipesService.update(updateRecipeDto);
-  }
-
-  @MessagePattern('deleteRecipe')
-  remove(@Payload() id: string) {
-    return this.recipesService.remove(+id);
-  }
 }

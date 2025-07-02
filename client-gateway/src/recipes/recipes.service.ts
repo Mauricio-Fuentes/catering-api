@@ -24,11 +24,5 @@ export class RecipesService {
     return this.clientNats.send('findRecipe', {id});
   }
 
-  update(id: number, updateRecipeDto: UpdateRecipeDto) {
-    return this.clientNats.send('UpdateRecipe', {id, updateRecipeDto});
-  }
 
-  remove(id: number) {
-    return this.clientNats.send('UpdateRecipe', {id});
-  }
 }

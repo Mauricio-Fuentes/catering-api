@@ -107,26 +107,5 @@ export class RecipesService extends PrismaClient implements OnModuleInit {
     return recipe;
   }
 
-  async update(updateRecipeDto: UpdateRecipeDto) {
-    const {id, ...recipe} = updateRecipeDto;
 
-    await this.findOne(id);
-
-    return this.recipe.update({
-      where: {
-        id: id
-      },
-      data: recipe
-    });
-  }
-
-  async remove(id: number) {
-    await this.findOne(id);
-    const recipe = await this.recipe.delete({
-      where: {
-        id: id
-      }
-    });
-    return recipe;
-  }
 }
