@@ -1,11 +1,13 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreatePlanTypeDto } from './dto/create-plan-type.dto';
 import { UpdatePlanTypeDto } from './dto/update-plan-type.dto';
 import { PrismaClient } from '@prisma/client';
-import { PlantType } from '../../generated/prisma/index';
+import { PaginationDto } from './dto/PaginationDto';
 
 @Injectable()
 export class PlanTypeService extends PrismaClient implements OnModuleInit {
+
+  private readonly logger = new Logger('PlanTypeService');
 
   constructor(){
     super();
@@ -17,20 +19,60 @@ export class PlanTypeService extends PrismaClient implements OnModuleInit {
   }
 
   async create(createPlanTypeDto: CreatePlanTypeDto) {
-    const planType = await this.PlantType.create({
+    this.logger.log(`Creado el plan Type`);
+    const planType = await this.plantType.create({
       data: {
-        
+        description: createPlanTypeDto.description,
+        amount: createPlanTypeDto.amount,
+        discount: createPlanTypeDto.discount,
+        currency: createPlanTypeDto.currency,
+        createdAt: new Date(),
+        DetailPlanType: {
+          create: createPlanTypeDto.recipes.map((recipe) => ({
+            recipeid: recipe,
+            createdAt: new Date()
+          }))
+        }
+      },
+      include: {
+        DetailPlanType: true
       }
     });
-    return 'This action adds a new planType';
+
+    this.logger.log(`plan type created ${JSON.stringify(planType)}`);
+    
+    return planType;
   }
 
-  findAll() {
-    return `This action returns all planType`;
+  async findAll(planTypePaginationDto: PaginationDto) {
+    const {page, limit} = planTypePaginationDto;
+    const totalPages = await this.recipe.count();
+    const totalPage = Math.ceil(totalPages / limit);
+    return {
+      data: await this.plantType.findMany({
+        skip: (page - 1) * limit,
+        take: limit
+      }),
+      metadata: {
+        total: totalPages,
+        page: page,
+        totalPage: totalPage
+      }
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} planType`;
+  async findOne(id: any) {
+    const planType = await this.plantType.findUnique({
+      where: {
+        id: id.id
+      }
+    });
+
+    if(!planType) {
+      throw new NotFoundException(`PlanType id ${id} not found`);
+    }
+
+    return planType;
   }
 
   update(id: number, updatePlanTypeDto: UpdatePlanTypeDto) {

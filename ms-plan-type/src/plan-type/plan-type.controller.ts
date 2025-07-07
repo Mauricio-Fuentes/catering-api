@@ -2,24 +2,26 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PlanTypeService } from './plan-type.service';
 import { CreatePlanTypeDto } from './dto/create-plan-type.dto';
 import { UpdatePlanTypeDto } from './dto/update-plan-type.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { PaginationDto } from './dto/PaginationDto';
 
 @Controller('plan-type')
 export class PlanTypeController {
   constructor(private readonly planTypeService: PlanTypeService) {}
 
-  @Post()
-  create(@Body() createPlanTypeDto: CreatePlanTypeDto) {
+  @MessagePattern('createPlanType')
+  create(@Payload() createPlanTypeDto: CreatePlanTypeDto) {
     return this.planTypeService.create(createPlanTypeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.planTypeService.findAll();
+  @MessagePattern('getPlanTypes')
+  findAll(@Payload() query: PaginationDto) {
+    return this.planTypeService.findAll(query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.planTypeService.findOne(+id);
+  @MessagePattern('getPlanTypeId')
+  findOne(@Payload() id: any) {
+    return this.planTypeService.findOne(id);
   }
 
   @Patch(':id')

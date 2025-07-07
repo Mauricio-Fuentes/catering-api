@@ -20,7 +20,7 @@ export class RecipesController {
   }
 
   @MessagePattern('findRecipe')
-  findOne(@Payload('id') id: string) {
+  findOne(@Payload() id: string) {
     return this.recipesService.findOne(+id);
   }
 

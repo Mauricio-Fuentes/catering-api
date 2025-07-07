@@ -1,6 +1,5 @@
 import { Inject, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
-import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { NATS_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { PrismaClient } from '@prisma/client';
@@ -36,6 +35,8 @@ export class RecipesService extends PrismaClient implements OnModuleInit {
         data: {
           description: createRecipeDto.description,
           createdAt: new Date(),
+          registerdate: new Date(),
+          modifydate: new Date(),
           detailRecipe: {
             createMany: {
               data: createRecipeDto.products.map((productRecipe) => ({

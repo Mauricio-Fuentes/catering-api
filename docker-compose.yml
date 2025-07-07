@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata-microservices-last-new-two:/var/lib/postgresql/data
+      - pgdata-microservices-recipes:/var/lib/postgresql/data
       - ./database:/docker-entrypoint-initdb.d
 
   nats-server:
@@ -58,4 +58,4 @@ services:
 
 
 volumes:
-  pgdata-microservices-last-new-two:
+  pgdata-microservices-recipes:

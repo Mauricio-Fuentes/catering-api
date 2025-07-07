@@ -25,6 +25,8 @@ model DetailPlanType {
   recipeid   Int
   createdAt  DateTime? @default(now())
   updatedAt  DateTime? @default(now())
+  PlantType  PlantType @relation(fields: [plantypeid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_planType")
+  Recipe     Recipe    @relation(fields: [recipeid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_recipe")
 }
 
 model Payment {
@@ -46,13 +48,14 @@ model Plan {
 }
 
 model PlantType {
-  id          Int       @id(map: "PlanType_pkey") @default(autoincrement())
-  description String
-  amount      Float
-  discount    Float
-  currency    Int
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @default(now())
+  id             Int              @id(map: "PlanType_pkey") @default(autoincrement())
+  description    String
+  amount         Float
+  discount       Float
+  currency       Int
+  createdAt      DateTime?        @default(now())
+  updatedAt      DateTime?        @default(now())
+  DetailPlanType DetailPlanType[]
 }
 
 model Product {
@@ -70,13 +73,14 @@ model Product {
 }
 
 model Recipe {
-  id           Int            @id @default(autoincrement())
-  description  String
-  registerdate DateTime?
-  modifydate   DateTime?
-  createdAt    DateTime?      @default(now())
-  updatedAt    DateTime?      @default(now())
-  detailRecipe detailRecipe[]
+  id             Int              @id @default(autoincrement())
+  description    String
+  registerdate   DateTime?
+  modifydate     DateTime?
+  createdAt      DateTime?        @default(now())
+  updatedAt      DateTime?        @default(now())
+  DetailPlanType DetailPlanType[]
+  detailRecipe   detailRecipe[]
 }
 
 model Review {

@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { HealthCheckModule } from './health-check/health-check.module';
 import { KafkaModule } from './transports/kafka.module';
 import { RecipesModule } from './recipes/recipes.module';
+import { PlanTypesModule } from './plan-types/plan-types.module';
+import { ClientsModule } from './clients/clients.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { RecipesModule } from './recipes/recipes.module';
     AuthModule,
     HealthCheckModule,
     RecipesModule,
+    PlanTypesModule,
+    ClientsModule,
   ],
 })
 export class AppModule {}

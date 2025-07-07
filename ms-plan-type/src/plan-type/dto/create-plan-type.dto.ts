@@ -1,4 +1,5 @@
-import { IsNumber, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { ArrayMinSize, IsArray, IsNumber, IsString, ValidateNested } from "class-validator";
 
 export class CreatePlanTypeDto {
 
@@ -13,5 +14,10 @@ export class CreatePlanTypeDto {
 
     @IsNumber()
     public currency: number;
+
+    @IsArray()
+    @ArrayMinSize(1)
+    @Type(() => Number)
+    public recipes: number[];
 
 }

@@ -7,52 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Client {
-  id        Int       @id @default(autoincrement())
-  name      String
-  lastname  String
-  datebirth DateTime
-  phone     String?
-  email     String?
-  address   String?
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @default(now())
-}
-
-model DetailPlanType {
-  id         Int       @id @default(autoincrement())
-  plantypeid Int
-  recipeid   Int
-  createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @default(now())
-}
-
-model Payment {
-  id        Int       @id @default(autoincrement())
-  planid    Int       @default(1)
-  amount    Float
-  currency  Int
-  status    Int
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @default(now())
-}
-
-model Plan {
-  id         Int       @id @default(autoincrement())
-  plantypeid Int
-  clientid   Int
-  createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @default(now())
-}
-
 model PlantType {
-  id          Int       @id(map: "PlanType_pkey") @default(autoincrement())
-  description String
-  amount      Float
-  discount    Float
-  currency    Int
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @default(now())
+  id             Int              @id(map: "PlanType_pkey") @default(autoincrement())
+  description    String
+  amount         Float
+  discount       Float
+  currency       Int
+  createdAt      DateTime?        @default(now())
+  updatedAt      DateTime?        @default(now())
+  DetailPlanType DetailPlanType[]
 }
 
 model Product {
@@ -70,22 +33,14 @@ model Product {
 }
 
 model Recipe {
-  id           Int            @id @default(autoincrement())
-  description  String
-  registerdate DateTime?
-  modifydate   DateTime?
-  createdAt    DateTime?      @default(now())
-  updatedAt    DateTime?      @default(now())
-  detailRecipe detailRecipe[]
-}
-
-model Review {
-  id        Int       @id @default(autoincrement())
-  clientid  Int
-  weight    Int?
-  height    Int?
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @default(now())
+  id             Int              @id @default(autoincrement())
+  description    String
+  registerdate   DateTime?
+  modifydate     DateTime?
+  createdAt      DateTime?        @default(now())
+  updatedAt      DateTime?        @default(now())
+  DetailPlanType DetailPlanType[]
+  detailRecipe   detailRecipe[]
 }
 
 model Role {
@@ -114,4 +69,53 @@ model detailRecipe {
   createdAt DateTime? @default(now())
   updatedAt DateTime? @default(now())
   Recipe    Recipe    @relation(fields: [recipeId], references: [id], onDelete: SetNull, map: "RecipeDetail_recipeId_fkey")
+}
+
+model Client {
+  id        Int       @id @default(autoincrement())
+  name      String
+  lastname  String
+  datebirth DateTime
+  phone     String?
+  email     String?
+  address   String?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
+}
+
+model DetailPlanType {
+  id         Int       @id @default(autoincrement())
+  plantypeid Int
+  recipeid   Int
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @default(now())
+  PlantType  PlantType @relation(fields: [plantypeid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_planType")
+  Recipe     Recipe    @relation(fields: [recipeid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_recipe")
+}
+
+model Payment {
+  id        Int       @id @default(autoincrement())
+  planid    Int       @default(1)
+  amount    Float
+  currency  Int
+  status    Int
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
+}
+
+model Plan {
+  id         Int       @id @default(autoincrement())
+  plantypeid Int
+  clientid   Int
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @default(now())
+}
+
+model Review {
+  id        Int       @id @default(autoincrement())
+  clientid  Int
+  weight    Int?
+  height    Int?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
 }

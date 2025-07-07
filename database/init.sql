@@ -77,7 +77,9 @@ CREATE TABLE IF NOT EXISTS public."DetailPlanType"(
     recipeId int4 not null,
     "createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP NULL,
 	"updatedAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP NULL,
-    CONSTRAINT "DetailPlanType_pkey" PRIMARY KEY (id)
+    CONSTRAINT "DetailPlanType_pkey" PRIMARY KEY (id),
+    CONSTRAINT "fk_planType" FOREIGN KEY (planTypeId) REFERENCES public."PlantType"(id),
+    CONSTRAINT "fk_recipe" FOREIGN KEY (recipeId) REFERENCES public."Recipe"(id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Plan"(
