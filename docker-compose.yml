@@ -56,6 +56,95 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
 
+  client-gateway:
+    depends_on: 
+      - db-microservices
+      - kafka
+    build: ./client-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client-gateway/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3000
+      - NATS_SERVERS=nats://nats-server:4222
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+
+  auth-ms:
+    depends_on:
+      - db-microservices
+    build: ./ms-auth
+    volumes:
+      - ./ms-auth/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3003
+      - NATS_SERVERS=nats://nats-server:4222
+      - JWT_SECRET=secret
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+      
+  products-ms:
+    depends_on: 
+      - db-microservices
+    build: ./ms-products
+    volumes:
+      - ./ms-products/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3001
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+
+  recipe-ms:
+    depends_on: 
+      - db-microservices
+    build: ./ms-recipe
+    volumes:
+      - ./ms-recipe/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3001
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+
+  client-ms:
+    depends_on: 
+      - db-microservices
+    build: ./ms-client
+    volumes:
+      - ./ms-client/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3001
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+
+  review-ms:
+    depends_on: 
+      - db-microservices
+    build: ./ms-review
+    volumes:
+      - ./ms-review/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3001
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+  
+  planType-ms:
+    depends_on: 
+      - db-microservices
+    build: ./ms-plan-type
+    volumes:
+      - ./ms-plan-type/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3001
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+  
 
 volumes:
   pgdata-microservices-recipes:
