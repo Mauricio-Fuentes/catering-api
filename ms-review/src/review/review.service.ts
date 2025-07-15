@@ -4,6 +4,7 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { PrismaClient } from '@prisma/client';
 import { NATS_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class ReviewService extends PrismaClient implements OnModuleInit {
@@ -41,8 +42,22 @@ export class ReviewService extends PrismaClient implements OnModuleInit {
     }
   }
 
-  findAll() {
-    return `This action returns all review`;
+  async findAll(reviewPaginationDto: PaginationDto) {
+    const {page, limit} = reviewPaginationDto;
+    this.logger.log(`Fetching all reviews with pagination: ${JSON.stringify(reviewPaginationDto)}`);
+    const totalPages = await this.review.count();
+    const totalPage = Math.ceil(totalPages / limit);
+    return {
+      data: await this.review.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      metadata: {
+        total: totalPages,
+        page: page,
+        totalPage: totalPage
+      }
+    };
   }
 
   findOne(id: number) {
