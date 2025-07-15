@@ -133,7 +133,7 @@ services:
       - NATS_SERVERS=nats://nats-server:4222
       - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
   
-  planType-ms:
+  plantype-ms:
     depends_on: 
       - db-microservices
     build: ./ms-plan-type

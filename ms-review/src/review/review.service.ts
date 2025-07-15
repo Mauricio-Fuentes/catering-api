@@ -23,7 +23,7 @@ export class ReviewService extends PrismaClient implements OnModuleInit {
       this.logger.log(`Creating a new review with data: ${JSON.stringify(createReviewDto)}`);
       const review = this.review.create({
         data: {
-          clientId: createReviewDto.clientId,
+          clientid: createReviewDto.clientId,
           weight: createReviewDto.weight,
           height: createReviewDto.height,
           createdAt: new Date()
