@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { PlansService } from './plans.service';
 import { CreatePlanDto } from './dto/create-plan.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
-import { PaginationDto } from '../../../plan-ms/src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/common';
 
 @Controller('plans')
 export class PlansController {

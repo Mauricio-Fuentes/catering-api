@@ -45,11 +45,24 @@ export class PlansService extends PrismaClient implements OnModuleInit {
   }
 
   async findAll(paginationDto: PaginationDto) {
+    const {page, limit} = paginationDto;
+    this.logger.log(`Fetching all reviews with pagination: ${JSON.stringify(paginationDto)}`);
+    const totalPages = await this.review.count();
+    const totalPage = Math.ceil(totalPages / limit);
     this.logger.log('Retrieving all plans');
     try {
-      const plans = await this.plan.findMany();
-      this.logger.log('Plans retrieved successfully:', plans);
-      return plans;
+      
+      return {
+        data: await this.plan.findMany({
+          skip: (page - 1) * limit,
+          take: limit,
+        }),
+        metadata: {
+          total: totalPages,
+          page: page,
+          totalPage: totalPage
+        }
+      };
     } catch (error) {
       this.logger.error('Error retrieving plans', error);
       this.logger.error('Error details:', error.message, error.stack);

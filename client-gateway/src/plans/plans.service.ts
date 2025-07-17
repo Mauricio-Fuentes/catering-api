@@ -18,6 +18,7 @@ export class PlansService {
   async onModuleInit() {
     this.logger.log('Connecting to Kafka...');
     this.kafkaClient.subscribeToResponseOf('createPlan');
+    this.kafkaClient.subscribeToResponseOf('findAllPlans');
     await this.kafkaClient.connect();
     this.logger.log('Kafka client connected');
   }
