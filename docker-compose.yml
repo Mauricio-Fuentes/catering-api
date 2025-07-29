@@ -144,6 +144,19 @@ services:
       - PORT=3001
       - NATS_SERVERS=nats://nats-server:4222
       - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+
+  plans-ms:
+    depends_on:
+      - db-microservices
+    build: ./plan-ms
+    volumes:
+      - ./plan-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3001
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
   
 
 volumes:
