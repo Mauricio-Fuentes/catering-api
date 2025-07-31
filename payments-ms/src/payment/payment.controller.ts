@@ -2,19 +2,21 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @Post()
-  create(@Body() createPaymentDto: CreatePaymentDto) {
+  @MessagePattern('createPayment')
+  create(@Payload() createPaymentDto: CreatePaymentDto) {
     return this.paymentService.create(createPaymentDto);
   }
 
-  @Get()
-  findAll() {
-    return this.paymentService.findAll();
+  @MessagePattern('findAllPayments')
+  findAll(@Payload() paginationDto: PaginationDto) {
+    return this.paymentService.findAll(paginationDto);
   }
 
   @Get(':id')
