@@ -9,6 +9,8 @@ import { PlanTypesModule } from './plan-types/plan-types.module';
 import { ClientsModule } from './clients/clients.module';
 import { ReviewModule } from './review/review.module';
 import { PlansModule } from './plans/plans.module';
+import { PaymentModule } from './payment/payment.module';
+import { KafkaService } from './kafka/kafka.service';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { PlansModule } from './plans/plans.module';
     ClientsModule,
     ReviewModule,
     PlansModule,
+    PaymentModule,
   ],
+  providers: [],
 })
 export class AppModule {}

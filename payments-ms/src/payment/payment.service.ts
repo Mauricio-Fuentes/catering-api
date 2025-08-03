@@ -19,6 +19,7 @@ export class PaymentService extends PrismaClient implements OnModuleInit {
   }
 
   create(createPaymentDto: CreatePaymentDto) {
+    console.log("Creating payment with data:", createPaymentDto);
     try {
       this.logger.log('Creating a new payment with data:', createPaymentDto);
 
@@ -35,6 +36,7 @@ export class PaymentService extends PrismaClient implements OnModuleInit {
 
       return payment;
     } catch (error) {
+      console.log(error);
       this.logger.error('Error creating payment', error);
       this.logger.error('Error details:', error.message, error.stack);
       throw new RpcException({

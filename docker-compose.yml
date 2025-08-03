@@ -158,6 +158,19 @@ services:
       - KAFKA_PORT=9092
       - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
   
+  payment-ms:
+    depends_on:
+      - db-microservices
+    build: ./payments-ms
+    volumes:
+      - ./payments-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3001
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+  
 
 volumes:
   pgdata-microservices-recipes:

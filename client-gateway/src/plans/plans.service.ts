@@ -4,31 +4,24 @@ import { UpdatePlanDto } from './dto/update-plan.dto';
 import { KAFKA_SERVICE } from 'src/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { PaginationDto } from 'src/common';
+import { KafkaService } from 'src/kafka/kafka.service';
 
 @Injectable()
 export class PlansService {
   private readonly logger = new Logger('PlansService');
 
   constructor(
-    @Inject(KAFKA_SERVICE) private readonly kafkaClient: ClientKafka
+    private readonly kafkaClient: KafkaService,
   ) {
     // Initialization logic if needed
   }
 
-  async onModuleInit() {
-    this.logger.log('Connecting to Kafka...');
-    this.kafkaClient.subscribeToResponseOf('createPlan');
-    this.kafkaClient.subscribeToResponseOf('findAllPlans');
-    await this.kafkaClient.connect();
-    this.logger.log('Kafka client connected');
-  }
-
   create(createPlanDto: CreatePlanDto) {
-    return this.kafkaClient.send('createPlan', createPlanDto);
+    return this.kafkaClient.getClient().send('createPlan', createPlanDto);
   }
 
   findAll(paginationDto: PaginationDto) {
-    return this.kafkaClient.send('findAllPlans', paginationDto);
+    return this.kafkaClient.getClient().send('findAllPlans', paginationDto);
   }
 
   findOne(id: number) {
