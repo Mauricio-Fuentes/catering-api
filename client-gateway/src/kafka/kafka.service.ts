@@ -7,10 +7,16 @@ export class KafkaService implements OnModuleInit {
     constructor(@Inject(KAFKA_SERVICE) private readonly kafkaClient: ClientKafka) {}
 
     onModuleInit() {
-        this.kafkaClient.subscribeToResponseOf('createPayment');
-        this.kafkaClient.subscribeToResponseOf('findAllPayments');
         this.kafkaClient.subscribeToResponseOf('createPlan');
         this.kafkaClient.subscribeToResponseOf('findAllPlans');
+        this.kafkaClient.subscribeToResponseOf('findOnePlan');
+        this.kafkaClient.subscribeToResponseOf('updatePlan');
+        this.kafkaClient.subscribeToResponseOf('removePlan');
+        this.kafkaClient.subscribeToResponseOf('createPaymentService');
+        this.kafkaClient.subscribeToResponseOf('findAllPayments');
+        this.kafkaClient.subscribeToResponseOf('findOnePayment');
+        this.kafkaClient.subscribeToResponseOf('updatePayment');
+        this.kafkaClient.subscribeToResponseOf('removePayment');
         this.kafkaClient.connect().then(() => {
             console.log('Kafka client connected');
         }).catch(err => {

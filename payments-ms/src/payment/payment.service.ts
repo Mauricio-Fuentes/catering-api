@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { PrismaClient } from 'generated/prisma';
@@ -19,7 +19,6 @@ export class PaymentService extends PrismaClient implements OnModuleInit {
   }
 
   create(createPaymentDto: CreatePaymentDto) {
-    console.log("Creating payment with data:", createPaymentDto);
     try {
       this.logger.log('Creating a new payment with data:', createPaymentDto);
 
@@ -36,7 +35,6 @@ export class PaymentService extends PrismaClient implements OnModuleInit {
 
       return payment;
     } catch (error) {
-      console.log(error);
       this.logger.error('Error creating payment', error);
       this.logger.error('Error details:', error.message, error.stack);
       throw new RpcException({
@@ -77,15 +75,81 @@ export class PaymentService extends PrismaClient implements OnModuleInit {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} payment`;
+  async findOne(id: number) {
+    try {
+      const payment = await this.payment.findFirst({
+        where: {id}
+      });
+
+      this.logger.log(`Payment found with id: ${id}`, payment);
+
+      if(!payment) {
+        throw new RpcException({
+          status: HttpStatus.NOT_FOUND,
+          message: `Payment with id ${id} not found`,
+        });
+      }
+
+      return payment;
+    } catch (error) {
+      this.logger.error('Error fetching payment', error);
+      throw new RpcException({
+        status: error.status,
+        message: error.message,
+      }); 
+    }
   }
 
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return `This action updates a #${id} payment`;
+  async update(updatePaymentDto: UpdatePaymentDto) {
+    try {
+      const {id, ...payment} = updatePaymentDto;
+      
+      const newPayment = await this.payment.update({
+        where: {id},
+        data: {
+          planid: payment.planId,
+          amount: payment.amount,
+          currency: payment.currency,
+          status: payment.status,
+        }
+      });
+
+      return newPayment;
+    } catch (error) {
+      this.logger.error('Error updating payment', error);
+      throw new RpcException({
+        status: error.status,
+        message: error.message,
+      });
+    
+    }
+    
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} payment`;
+  async remove(id: number) {
+    try {
+      const payment = this.payment.findFirst({
+        where: {id}
+      });
+      
+      if (!payment) {
+        throw new RpcException({
+          status: HttpStatus.NOT_FOUND,
+          message: `Payment with id ${id} not found`,
+        });
+      }
+
+      await this.payment.delete({
+        where: {id}
+      });
+
+      return 'Eliminado';
+    } catch (error) {
+      this.logger.error('Error removing payment', error);
+      throw new RpcException({
+        status: error.status,
+        message: error.message,
+      });
+    }
   }
 }

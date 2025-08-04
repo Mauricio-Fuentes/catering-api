@@ -9,7 +9,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @MessagePattern('createPayment')
+  @MessagePattern('createPaymentService')
   create(@Payload() createPaymentDto: CreatePaymentDto) {
     return this.paymentService.create(createPaymentDto);
   }
@@ -19,18 +19,18 @@ export class PaymentController {
     return this.paymentService.findAll(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.paymentService.findOne(+id);
+  @MessagePattern('findOnePayment')
+  findOne(@Payload('id') id: number) {
+    return this.paymentService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentService.update(+id, updatePaymentDto);
+  @MessagePattern('updatePayment')
+  update(@Payload() updatePaymentDto: UpdatePaymentDto) {
+    return this.paymentService.update(updatePaymentDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.paymentService.remove(+id);
+  @MessagePattern('removePayment')
+  remove(@Payload('id') id: number) {
+    return this.paymentService.remove(id);
   }
 }

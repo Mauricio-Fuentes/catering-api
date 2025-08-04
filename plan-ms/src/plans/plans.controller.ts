@@ -19,18 +19,20 @@ export class PlansController {
     return this.plansService.findAll(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.plansService.findOne(+id);
+  @MessagePattern('findOnePlan')
+  findOne(@Payload('id') id: number) {
+    return this.plansService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePlanDto: UpdatePlanDto) {
-    return this.plansService.update(+id, updatePlanDto);
+  @MessagePattern('updatePlan')
+  update(@Payload() updatePlanDto: UpdatePlanDto) {
+    return this.plansService.update(updatePlanDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.plansService.remove(+id);
+  @MessagePattern('removePlan')
+  remove(@Payload('id') id: number) {
+    console.log(id);
+    
+    return this.plansService.remove(id);
   }
 }

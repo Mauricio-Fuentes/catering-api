@@ -1,8 +1,6 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreatePlanDto } from './dto/create-plan.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
-import { KAFKA_SERVICE } from 'src/config';
-import { ClientKafka } from '@nestjs/microservices';
 import { PaginationDto } from 'src/common';
 import { KafkaService } from 'src/kafka/kafka.service';
 
@@ -25,14 +23,17 @@ export class PlansService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} plan`;
+    return this.kafkaClient.getClient().send('findOnePlan', id);
   }
 
   update(id: number, updatePlanDto: UpdatePlanDto) {
-    return `This action updates a #${id} plan`;
+    return this.kafkaClient.getClient().send('updatePlan', {
+      ...updatePlanDto,
+      id,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} plan`;
+    return this.kafkaClient.getClient().send('removePlan', {id});
   }
 }

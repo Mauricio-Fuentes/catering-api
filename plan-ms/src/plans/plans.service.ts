@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CreatePlanDto } from './dto/create-plan.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
 import { PrismaClient } from 'generated/prisma';
@@ -74,14 +74,82 @@ export class PlansService extends PrismaClient implements OnModuleInit {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} plan`;
+    try {
+      const plan = this.plan.findFirst({
+        where: {id}
+      });
+
+      if(!plan) {
+        this.logger.error(`Plan with id ${id} not found`);
+        throw new RpcException({
+          status: HttpStatus.NOT_FOUND,
+          message: `Plan with id ${id} not found`,
+        });
+      }
+
+      return plan;
+    } catch (error) {
+      this.logger.error('Error fetching plan', error);
+      this.logger.error('Error details:', error.message, error.stack);
+      throw new RpcException({
+        status: error.status,
+        message: error.message,
+      });
+      
+    }
   }
 
-  update(id: number, updatePlanDto: UpdatePlanDto) {
-    return `This action updates a #${id} plan`;
+  async update(updatePlanDto: UpdatePlanDto) {
+    try {
+      const {id, ...plan} = updatePlanDto;
+
+      const newPlan = await this.plan.update({
+        where: {id},
+        data: {
+          plantypeid: plan.planTypeId,
+          clientid: plan.clientId,
+        },
+      });
+
+      return newPlan;
+
+    } catch (error) {
+      this.logger.error('Error updating plan', error);
+      this.logger.error('Error details:', error.message, error.stack);
+      throw new RpcException({
+        status: error.status,
+        message: error.message,
+      });
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} plan`;
+  async remove(id: number) {
+    try {
+      const plan = this.plan.findFirst({
+        where: {id}
+      });
+
+      if(!plan) {
+        this.logger.error(`Plan with id ${id} not found`);
+        throw new RpcException({
+          status: HttpStatus.NOT_FOUND,
+          message: `Plan with id ${id} not found`,
+        });
+      }
+
+      await this.plan.delete({
+        where: {id}
+      });
+
+      return 'Eliminado';
+
+    } catch (error) {
+      this.logger.error('Error removing plan', error);
+      this.logger.error('Error details:', error.message, error.stack);
+      throw new RpcException({
+        status: error.status,
+        message: error.message,
+      });
+    }
   }
 }
